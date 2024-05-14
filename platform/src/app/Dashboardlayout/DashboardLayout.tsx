@@ -9,7 +9,7 @@ const DashboardLayout = ({ children }: Readonly<{ children: React.ReactNode }>) 
           <Sidebar />
           <div className="flex flex-col flex-1">
             <Header />
-            <main className="p-4">{children}</main>
+            <main className="p-[50px] ">{children}</main>
           </div>
         </div> 
       </main>

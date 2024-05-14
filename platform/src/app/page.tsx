@@ -25,7 +25,7 @@ export default function Home() {
                                           <div className="text-[24px] font-bold my-[30px] flex items-center justify-center">Join the waitlist</div>
                                           <input type="text" className="rounded-[6px] h-[50px] w-full pl-[20px] text-[#000]" placeholder="name@gmail.com"/>
 
-                                          <div className="text-[20px] rounded-[6px] my-[10px] h-[40px] w-full bg-[#111] text-[#fff] items-center justify-center cursor-pointer font-bold flex hover:text-[#111] hover:bg-[#fdfe00] transition duration-300 ease-in ">Submit</div>
+                                          <div className=" text-[20px] rounded-[6px] my-[15px] h-[40px] w-full bg-[#111] text-[#fff] items-center justify-center cursor-pointer font-bold flex hover:text-[#111] hover:bg-[#fdfe00] transition duration-300 ease-in ">Submit</div>
                                         </div>
           
             </main>
