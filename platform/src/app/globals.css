@@ -1,10 +1,57 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
 
-body{
+.btn {
+  border: none;
+  width: 15em;
+  height: 5em;
+  border-radius: 3em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  background: #1c1a1c;
+  cursor: pointer;
+  transition: all 450ms ease-in-out;
+}
+
+.sparkle {
+  fill: #aaaaaa;
+  transition: all 800ms ease;
+}
+
+.text {
+  font-weight: 600;
+  color: white;
+  font-size: medium;
+}
+
+.btn:hover {
+  background: linear-gradient(45deg, #ffd700, #ffc107, #ff9800);
+
+  box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.4),
+    inset 0px -4px 0px 0px rgba(0, 0, 0, 0.2),
+    0px 0px 0px 4px rgba(255, 255, 255, 0.2), 0px 0px 180px 0px #9917ff;
+  transform: translateY(-2px);
+}
+
+.btn:hover .text {
+  color: white;
+}
+
+.btn:hover .sparkle {
+  fill: white;
+  transform: scale(1.2);
+}
+.section-container:hover {
+  transform: scale(1.03); /* Scale up the section on hover */
+  transition: transform 0.3s ease; /* Add transition for smooth effect */
+}
+
+body {
   background-color: #111;
   font-family: "Rubik", sans-serif;
-  color:#fff;
+  color: #fff;
 }

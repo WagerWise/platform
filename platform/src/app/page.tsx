@@ -1,7 +1,5 @@
 import Image from "next/image";
-import Sidebar from "./components/sidebar";
-import Header from "./components/header";
-// import DashboardLayout from "./Dashboardlayout/DashboardLayout";
+
 import { DashboardLayout } from "./components2/Layout";
 export default function Home() {
   return (
