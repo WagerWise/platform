@@ -93,7 +93,32 @@ const Page = () => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+  const winData = [
+    {
+      title: "Opulent Wealth",
+      text: "",
+      img: "https://res.cloudinary.com/dtfvdjvyr/image/upload/v1715460231/Find_Inspiration_from_Works_in_Neon_by_14_Illustrations_kh5lb8.jpg",
+      path: "/wealth",
+    },
+    {
+      title: "Game 2",
 
+      img: "https://res.cloudinary.com/dtfvdjvyr/image/upload/v1699228573/ramon-salinero-vEE00Hx5d0Q-unsplash_boz3h8.jpg",
+      path: "",
+    },
+    {
+      title: "Game 3",
+
+      img: "https://res.cloudinary.com/dtfvdjvyr/image/upload/v1699228956/patrick-perkins-ETRPjvb0KM0-unsplash_1_goswwg.jpg",
+      path: "/consulting-services",
+    },
+    {
+      title: "Game 4",
+
+      img: "https://res.cloudinary.com/dtfvdjvyr/image/upload/v1699228956/patrick-perkins-ETRPjvb0KM0-unsplash_1_goswwg.jpg",
+      path: "/consulting-services",
+    },
+  ];
   return (
     <DashboardLayout>
       <main>
@@ -175,6 +200,21 @@ const Page = () => {
             )}
           </div>
         </center>
+
+        <section className="mt-20">
+          <div>
+            <h2 className="text-wizard font-bold text-2xl">Possible Drops</h2>
+          </div>
+          <div className="flex items-center w-full gap-3">
+            {winData.map((card, index) => (
+              <div className="col" key={index}>
+                <div className="bg-dashfix shadow-sm rounded-lg mb-5 overflow-hidden ">
+                  <img className="w-46 h-46" src={card.img} alt={card.title} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
         {/* <section className=" w-96 gap-3 overflow-hidden">
           <Slider ref={sliderRef} {...settings}>
             {cards.map((card) => (

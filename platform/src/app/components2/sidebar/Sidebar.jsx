@@ -1,5 +1,6 @@
 import { useDashboardContext } from "../Provider";
 import css from "../style.module.css";
+import Link from "next/link";
 const style = {
   mobileOrientation: {
     start: "left-0",
@@ -20,12 +21,14 @@ export function Sidebar(props) {
         ${sidebarOpen ? style.open : style.close} ${css.scrollbar}`}
     >
       <div className="h-screen w-full border-r-2 border-[#5a5959] ">
-        <img
-          className="flex items-center justify-center m-auto"
-          height={100}
-          width={100}
-          src="/logo.png"
-        />
+        <Link to={`/`}>
+          <img
+            className="flex items-center justify-center m-auto"
+            height={100}
+            width={100}
+            src="/logo.png"
+          />
+        </Link>
       </div>
     </aside>
   );
