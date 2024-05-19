@@ -47,6 +47,12 @@ const Page = () => {
         "https://res.cloudinary.com/dtfvdjvyr/image/upload/v1715824825/bonk_crypto_where_to_buy_slatf7.jpg",
       name: "Card 3",
     },
+    {
+      id: 4,
+      image:
+        "https://res.cloudinary.com/dtfvdjvyr/image/upload/v1715824825/bonk_crypto_where_to_buy_slatf7.jpg",
+      name: "Card 3",
+    },
   ];
   const play = () => {
     sliderRef.slickPlay();
@@ -54,7 +60,10 @@ const Page = () => {
   const pause = () => {
     sliderRef.slickPause();
   };
-
+  const playSound = () => {
+    const audio = new Audio(`/marimba.mp3`);
+    audio.play();
+  };
   useEffect(() => {
     // Pause the slider when the component mounts
     sliderRef.current.slickPause();
@@ -76,6 +85,7 @@ const Page = () => {
   const handleRaffle = () => {
     setSelectedCard(null);
     setIsRaffling(true);
+    playSound();
     sliderRef.current.slickPlay();
   };
 
@@ -95,27 +105,31 @@ const Page = () => {
   };
   const winData = [
     {
-      title: "Opulent Wealth",
-      text: "",
-      img: "https://res.cloudinary.com/dtfvdjvyr/image/upload/v1715460231/Find_Inspiration_from_Works_in_Neon_by_14_Illustrations_kh5lb8.jpg",
-      path: "/wealth",
-    },
-    {
-      title: "Game 2",
-
-      img: "https://res.cloudinary.com/dtfvdjvyr/image/upload/v1699228573/ramon-salinero-vEE00Hx5d0Q-unsplash_boz3h8.jpg",
-      path: "",
-    },
-    {
+      id: 1,
       title: "Game 3",
 
-      img: "https://res.cloudinary.com/dtfvdjvyr/image/upload/v1699228956/patrick-perkins-ETRPjvb0KM0-unsplash_1_goswwg.jpg",
+      img: "https://res.cloudinary.com/dtfvdjvyr/image/upload/v1715824825/bonk_crypto_where_to_buy_slatf7.jpg",
       path: "/consulting-services",
     },
     {
+      id: 2,
       title: "Game 4",
 
-      img: "https://res.cloudinary.com/dtfvdjvyr/image/upload/v1699228956/patrick-perkins-ETRPjvb0KM0-unsplash_1_goswwg.jpg",
+      img: "https://res.cloudinary.com/dtfvdjvyr/image/upload/v1715824825/bonk_crypto_where_to_buy_slatf7.jpg",
+      path: "/consulting-services",
+    },
+    {
+      id: 3,
+      title: "Game 4",
+
+      img: "https://res.cloudinary.com/dtfvdjvyr/image/upload/v1715824825/bonk_crypto_where_to_buy_slatf7.jpg",
+      path: "/consulting-services",
+    },
+    {
+      id: 4,
+      title: "Game 4",
+
+      img: "https://res.cloudinary.com/dtfvdjvyr/image/upload/v1715824825/bonk_crypto_where_to_buy_slatf7.jpg",
       path: "/consulting-services",
     },
   ];
@@ -172,7 +186,7 @@ const Page = () => {
             <button
               onClick={handleRaffle}
               disabled={isRaffling}
-              className="btn text-white font-bold"
+              className="btn text-white font-bold border-primary"
             >
               <svg
                 height="24"
@@ -203,13 +217,19 @@ const Page = () => {
 
         <section className="mt-20">
           <div>
-            <h2 className="text-wizard font-bold text-2xl">Possible Drops</h2>
+            <h2 className="text-wizard font-bold text-xl mb-10">
+              Possible Drops
+            </h2>
           </div>
-          <div className="flex items-center w-full gap-3">
-            {winData.map((card, index) => (
-              <div className="col" key={index}>
-                <div className="bg-dashfix shadow-sm rounded-lg mb-5 overflow-hidden ">
-                  <img className="w-46 h-46" src={card.img} alt={card.title} />
+          <div className="flex flex-row items-center w-full  gap-3">
+            {winData.map((card) => (
+              <div className="flex w-full" key={card.id}>
+                <div className="w-full border-gradient border-[3px] border-solid mb-5 overflow-hidden ">
+                  <img
+                    className="flex w-46 h-46"
+                    src={card.img}
+                    alt={card.title}
+                  />
                 </div>
               </div>
             ))}

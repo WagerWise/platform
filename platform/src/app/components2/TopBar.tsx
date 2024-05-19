@@ -1,8 +1,102 @@
 import Link from "next/link";
 import { useDashboardContext } from "./Provider";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import {
+  getAssociatedTokenAddress,
+  getAccount,
+  createAssociatedTokenAccount,
+} from "@solana/spl-token";
+import {
+  PublicKey,
+  clusterApiUrl,
+  Connection,
+  Transaction,
+  SystemProgram,
+} from "@solana/web3.js";
+import { FC, useState, useEffect } from "react";
 export function TopBar() {
   const { toggleSidebar } = useDashboardContext();
+  const [bonkBalance, setBonkBalance] = useState(0);
+
+  const { publicKey } = useWallet();
+  const [parseHistoryUrl, setParseHistoryUrl] = useState("");
+
+  // Helius RPC URL and API key
+  const HELIUS_RPC_URL =
+    "https://rpc.helius.xyz?api-key=4facc46f-a686-4906-8283-45f08abb210f";
+  const connection = new Connection(HELIUS_RPC_URL);
+  const BONK_MINT_ADDRESS = new PublicKey(
+    "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"
+  );
+
+  useEffect(() => {
+    if (!connection || !publicKey) {
+      console.log("No connection or publicKey found.");
+      return;
+    }
+    setParseHistoryUrl(
+      `https://api.helius.xyz/v0/addresses/${publicKey}/transactions?api-key=4facc46f-a686-4906-8283-45f08abb210f`
+    );
+  }, [connection, publicKey]);
+
+  useEffect(() => {
+    const fetchBalances = async () => {
+      console.log("Fetching balances...");
+      console.log("PublicKey:", publicKey?.toBase58());
+      console.log("Connection:", connection.rpcEndpoint);
+
+      try {
+        // Get associated token account for BONK
+        const bonkTokenAccount = await getAssociatedTokenAddress(
+          BONK_MINT_ADDRESS,
+          publicKey
+        );
+        console.log("BONK Token Account:", bonkTokenAccount.toBase58());
+
+        // Fetch BONK token balance
+        const bonkAccountInfo = await connection.getTokenAccountBalance(
+          bonkTokenAccount
+        );
+        console.log("BONK Account Info:", bonkAccountInfo);
+
+        const bonkBalance = bonkAccountInfo.value.amount; // Amount is in the smallest unit
+        setBonkBalance(bonkBalance);
+      } catch (error) {
+        console.error("Failed to fetch BONK balance:", error);
+
+        // Attempt to create the associated token account if it doesn't exist
+        try {
+          const bonkTokenAccount = await createAssociatedTokenAccount(
+            connection,
+            publicKey,
+            BONK_MINT_ADDRESS,
+            publicKey
+          );
+
+          console.log(
+            "Created BONK Token Account:",
+            bonkTokenAccount.toBase58()
+          );
+
+          // Fetch BONK token balance again
+          const bonkAccountInfo = await connection.getTokenAccountBalance(
+            bonkTokenAccount
+          );
+          console.log("BONK Account Info:", bonkAccountInfo);
+
+          const bonkBalance = bonkAccountInfo.value.amount; // Amount is in the smallest unit
+          setBonkBalance(bonkBalance);
+        } catch (creationError) {
+          console.error("Failed to create BONK token account:", creationError);
+          setBonkBalance(0);
+        }
+      }
+    };
+
+    fetchBalances();
+  }, [connection, publicKey]);
+
   return (
     <header className="relative z-10 h-16 w-full items-center  md:h-20 border-b-2 border-[#5a5959] ">
       <div className="relative mx-auto flex h-full flex-col justify-center px-3">
@@ -27,47 +121,22 @@ export function TopBar() {
               </Link>
             </div>
           </div>
-          <div className="relative ml-5 flex w-full items-center justify-end p-1 sm:right-auto sm:mr-0">
-            {/* <a href="#" className="block pr-5">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 text-gray-600"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </a> */}
-            {/* <a href="#" className="block pr-5">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6 text-gray-600"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z" />
-                <path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z" />
-              </svg>
-            </a> */}
-            {/* <a href="#" className="relative block pr-5">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6 text-gray-600"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M4.083 9h1.946c.089-1.546.383-2.97.837-4.118A6.004 6.004 0 004.083 9zM10 2a8 8 0 100 16 8 8 0 000-16zm0 2c-.076 0-.232.032-.465.262-.238.234-.497.623-.737 1.182-.389.907-.673 2.142-.766 3.556h3.936c-.093-1.414-.377-2.649-.766-3.556-.24-.56-.5-.948-.737-1.182C10.232 4.032 10.076 4 10 4zm3.971 5c-.089-1.546-.383-2.97-.837-4.118A6.004 6.004 0 0115.917 9h-1.946zm-2.003 2H8.032c.093 1.414.377 2.649.766 3.556.24.56.5.948.737 1.182.233.23.389.262.465.262.076 0 .232-.032.465-.262.238-.234.498-.623.737-1.182.389-.907.673-2.142.766-3.556zm1.166 4.118c.454-1.147.748-2.572.837-4.118h1.946a6.004 6.004 0 01-2.783 4.118zm-6.268 0C6.412 13.97 6.118 12.546 6.03 11H4.083a6.004 6.004 0 002.783 4.118z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </a> */}
-            <section href="#" className="relative block">
+          <div className="relative mr-2 flex w-full items-center justify-end p-1 sm:right-auto sm:mr-0">
+            <div className="mr-2 px-2">
+              {publicKey ? (
+                <div>
+                  <h1>
+                    <span className="text-primary">BONK</span> Balance:{" "}
+                    {bonkBalance} <span className="text-wizard">BONK</span>
+                  </h1>
+                </div>
+              ) : (
+                <h1>
+                  <span className="text-primary">BONK</span> Balance:🐕{" "}
+                </h1>
+              )}
+            </div>
+            <section className="relative block">
               <WalletMultiButton />
             </section>
           </div>

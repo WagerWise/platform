@@ -20,16 +20,16 @@ export function Sidebar(props) {
         ${style.mobileOrientation[props.mobileOrientation]} 
         ${sidebarOpen ? style.open : style.close} ${css.scrollbar}`}
     >
-      <div className="h-screen w-full border-r-2 border-[#5a5959] ">
-        <Link to={`/`}>
+      <Link href="/">
+        <div className="h-screen w-full border-r-2 border-[#5a5959] ">
           <img
             className="flex items-center justify-center m-auto"
             height={100}
             width={100}
             src="/logo.png"
           />
-        </Link>
-      </div>
+        </div>
+      </Link>
     </aside>
   );
 }
