@@ -3,6 +3,17 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Modal from "../components2/Modal/Modal";
+import {
+  Connection,
+  PublicKey,
+  Keypair,
+  Transaction,
+  SystemProgram,
+  LAMPORTS_PER_SOL,
+} from "@solana/web3.js";
+
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { Token, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import React, { useState, useEffect, useRef } from "react";
 // import DashboardLayout from "../Dashboardlayout/DashboardLayout";
 
@@ -13,6 +24,8 @@ const Page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
   const [isRaffling, setIsRaffling] = useState(false);
+
+  const { publicKey } = useWallet(); // grab wallet pubkey
 
   const settings = {
     infinite: true,
@@ -64,6 +77,7 @@ const Page = () => {
     const audio = new Audio(`/marimba.mp3`);
     audio.play();
   };
+
   useEffect(() => {
     // Pause the slider when the component mounts
     sliderRef.current.slickPause();
@@ -133,11 +147,18 @@ const Page = () => {
       path: "/consulting-services",
     },
   ];
+  if (selectedCard) {
+    const winSound = () => {
+      const audio = new Audio(`/cute.mp3`);
+      audio.play();
+    };
+    winSound();
+  }
   return (
     <DashboardLayout>
       <main>
         <section className="section-container">
-          <div className="flex items-center justify-center w-full hover:scale-103 duration-300">
+          <div className="flex items-center justify-center w-full ">
             <div
               className="flex items-center justify-center w-60 h-56 bg-cover bg-no-repeat"
               style={{
@@ -149,7 +170,10 @@ const Page = () => {
         </section>
 
         <center>
-          <section className="slider-container overflow-hidden mt-20">
+          <div className="flex w-full mt-10">
+            <button className="open-btn">Open for 100 BONK</button>
+          </div>
+          <section className="slider-container overflow-hidden mt-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="1em"
@@ -199,7 +223,7 @@ const Page = () => {
               >
                 <path d="M10,21.236,6.755,14.745.264,11.5,6.755,8.255,10,1.764l3.245,6.491L19.736,11.5l-6.491,3.245ZM18,21l1.5,3L21,21l3-1.5L21,18l-1.5-3L18,18l-3,1.5ZM19.333,4.667,20.5,7l1.167-2.333L24,3.5,21.667,2.333,20.5,0,19.333,2.333,17,3.5Z"></path>
               </svg>
-              {isRaffling ? "Spinning..." : "Start Spin"}
+              {isRaffling ? "Spinning..." : "Test Spin"}
             </button>
             {selectedCard && (
               <>
