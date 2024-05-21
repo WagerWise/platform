@@ -103,7 +103,7 @@ export function TopBar() {
         <div className="relative flex w-full items-center pl-1 sm:ml-0 sm:pr-2">
           <div className="relative left-0 flex w-3/4">
             <div className="flex  gap-[40px]">
-              <Link href="/dashboard">
+              <Link href="/game1">
                 <div className="w-[110px] bg-[#6e6b6b11] h-[90px] items-center justify-center flex cursor-pointer hover:opacity-[0.5]">
                   GAME 1
                 </div>
