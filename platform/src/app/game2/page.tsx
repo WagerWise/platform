@@ -2,6 +2,7 @@
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import axios from "axios";
 import Modal from "../components2/Modal/Modal";
 import {
   Connection,
@@ -24,8 +25,10 @@ const Page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
   const [isRaffling, setIsRaffling] = useState(false);
-
-  const { publicKey } = useWallet(); // grab wallet pubkey
+  const [isUserWin, setIsUserWin] = useState(true);
+  const { publicKey, sendTransaction, signTransaction } = useWallet();
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState(null);
 
   const settings = {
     infinite: true,
@@ -147,6 +150,51 @@ const Page = () => {
       path: "/consulting-services",
     },
   ];
+  const HELIUS_RPC_URL =
+    "https://rpc.helius.xyz?api-key=4facc46f-a686-4906-8283-45f08abb210f";
+  const connection = new Connection(HELIUS_RPC_URL);
+  const BONK_MINT_ADDRESS = new PublicKey(
+    "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"
+  );
+  const handlePlayGame = async () => {
+    if (!publicKey || !signTransaction) {
+      console.log("Wallet not connected or signTransaction not available");
+      return;
+    }
+
+    try {
+      const transaction = new Transaction().add(
+        SystemProgram.transfer({
+          fromPubkey: publicKey,
+          toPubkey: new PublicKey(
+            "GzJj5ubCzEbakT6zrcnArnVeNAGBsEkVx6LLkCEMdBvT"
+          ), // Replace with actual game authority public key
+          lamports: 100 * 10 ** 5, // Adjust for BONK's 5 decimals
+        })
+      );
+
+      transaction.recentBlockhash = (
+        await connection.getLatestBlockhash()
+      ).blockhash;
+      transaction.feePayer = publicKey;
+
+      const signedTransaction = await signTransaction(transaction);
+      const serializedTransaction = signedTransaction
+        .serialize()
+        .toString("base64");
+
+      const response = await axios.post("/api/play-game", {
+        userPublicKey: publicKey.toBase58(),
+        userSignedTx: serializedTransaction,
+        isUserWin,
+      });
+
+      console.log("Transaction response:", response.data);
+    } catch (error) {
+      console.error("Error during transaction:", error);
+    }
+  };
+
   if (selectedCard) {
     const winSound = () => {
       const audio = new Audio(`/cute.mp3`);
@@ -154,6 +202,7 @@ const Page = () => {
     };
     winSound();
   }
+
   return (
     <DashboardLayout>
       <main>
@@ -171,7 +220,13 @@ const Page = () => {
 
         <center>
           <div className="flex w-full mt-10">
-            <button className="open-btn">Open for 100 BONK</button>
+            <button
+              onClick={handlePlayGame}
+              disabled={loading}
+              className="open-btn"
+            >
+              Open for 100 BONK
+            </button>
           </div>
           <section className="slider-container overflow-hidden mt-2">
             <svg

@@ -60,7 +60,9 @@ export function TopBar() {
         );
         console.log("BONK Account Info:", bonkAccountInfo);
 
-        const bonkBalance = bonkAccountInfo.value.amount; // Amount is in the smallest unit
+        const bonkBalance = parseFloat(
+          (bonkAccountInfo.value.amount / 10 ** 5).toFixed(5)
+        ); // Amount is in the smallest unit
         setBonkBalance(bonkBalance);
       } catch (error) {
         console.error("Failed to fetch BONK balance:", error);
