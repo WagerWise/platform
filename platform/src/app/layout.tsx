@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <WalletContextProvider>{children}</WalletContextProvider>
-        <SupportEngine />
+        {/* <SupportEngine /> */}
       </body>
     </html>
   );

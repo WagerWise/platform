@@ -12,12 +12,9 @@ import {
   SystemProgram,
   LAMPORTS_PER_SOL,
 } from "@solana/web3.js";
-
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { Token, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import React, { useState, useEffect, useRef } from "react";
-// import DashboardLayout from "../Dashboardlayout/DashboardLayout";
-
 import { DashboardLayout } from "../components2/Layout";
 
 const Page = () => {
@@ -37,8 +34,8 @@ const Page = () => {
     speed: 100,
     autoplay: true,
     autoplaySpeed: 100,
-    prevArrow: null, // Remove the left navigation arrow
-    nextArrow: null, // Remove the right navigation arrow
+    prevArrow: null,
+    nextArrow: null,
     centerMode: true,
     centerPadding: "50px",
     vertical: false,
@@ -70,6 +67,7 @@ const Page = () => {
       name: "Card 3",
     },
   ];
+
   const play = () => {
     sliderRef.slickPlay();
   };
@@ -82,7 +80,6 @@ const Page = () => {
   };
 
   useEffect(() => {
-    // Pause the slider when the component mounts
     sliderRef.current.slickPause();
   }, []);
 
@@ -120,42 +117,41 @@ const Page = () => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
   const winData = [
     {
       id: 1,
       title: "Game 3",
-
       img: "https://res.cloudinary.com/dtfvdjvyr/image/upload/v1715824825/bonk_crypto_where_to_buy_slatf7.jpg",
       path: "/consulting-services",
     },
     {
       id: 2,
       title: "Game 4",
-
       img: "https://res.cloudinary.com/dtfvdjvyr/image/upload/v1715824825/bonk_crypto_where_to_buy_slatf7.jpg",
       path: "/consulting-services",
     },
     {
       id: 3,
       title: "Game 4",
-
       img: "https://res.cloudinary.com/dtfvdjvyr/image/upload/v1715824825/bonk_crypto_where_to_buy_slatf7.jpg",
       path: "/consulting-services",
     },
     {
       id: 4,
       title: "Game 4",
-
       img: "https://res.cloudinary.com/dtfvdjvyr/image/upload/v1715824825/bonk_crypto_where_to_buy_slatf7.jpg",
       path: "/consulting-services",
     },
   ];
+
   const HELIUS_RPC_URL =
     "https://rpc.helius.xyz?api-key=4facc46f-a686-4906-8283-45f08abb210f";
   const connection = new Connection(HELIUS_RPC_URL);
   const BONK_MINT_ADDRESS = new PublicKey(
     "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"
   );
+
   const handlePlayGame = async () => {
     if (!publicKey || !signTransaction) {
       console.log("Wallet not connected or signTransaction not available");
@@ -163,13 +159,16 @@ const Page = () => {
     }
 
     try {
+      console.log("User Public Key:", publicKey.toBase58());
+      console.log("Is User Win:", isUserWin);
+
       const transaction = new Transaction().add(
         SystemProgram.transfer({
           fromPubkey: publicKey,
           toPubkey: new PublicKey(
             "GzJj5ubCzEbakT6zrcnArnVeNAGBsEkVx6LLkCEMdBvT"
-          ), // Replace with actual game authority public key
-          lamports: 100 * 10 ** 5, // Adjust for BONK's 5 decimals
+          ),
+          lamports: 100 * 10 ** 5,
         })
       );
 
@@ -183,7 +182,7 @@ const Page = () => {
         .serialize()
         .toString("base64");
 
-      const response = await axios.post("/api/play-game", {
+      const response = await axios.post("http://localhost:3000/play-game", {
         userPublicKey: publicKey.toBase58(),
         userSignedTx: serializedTransaction,
         isUserWin,
@@ -300,7 +299,7 @@ const Page = () => {
               Possible Drops
             </h2>
           </div>
-          <div className="flex flex-row items-center w-full  gap-3">
+          <div className="flex flex-row items-center w-full gap-3">
             {winData.map((card) => (
               <div className="flex w-full" key={card.id}>
                 <div className="w-full border-gradient border-[3px] border-solid mb-5 overflow-hidden ">
@@ -314,15 +313,6 @@ const Page = () => {
             ))}
           </div>
         </section>
-        {/* <section className=" w-96 gap-3 overflow-hidden">
-          <Slider ref={sliderRef} {...settings}>
-            {cards.map((card) => (
-              <div className="flex gap-3" key={card.id}>
-                <img className="ml-2 gap-3" src={card.image} alt={card.name} />
-              </div>
-            ))}
-          </Slider>
-        </section> */}
       </main>
     </DashboardLayout>
   );

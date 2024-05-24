@@ -1,5 +1,3 @@
-// pages/api/play-game.ts
-
 import { Connection, PublicKey, Transaction, Keypair } from "@solana/web3.js";
 import {
   TOKEN_PROGRAM_ID,
@@ -31,10 +29,13 @@ export default async (req, res) => {
 
   const { userPublicKey, isUserWin, userSignedTx } = req.body;
 
-  if (!userPublicKey || !userSignedTx) {
+  if (!userPublicKey || !userSignedTx || typeof isUserWin !== "boolean") {
     return res
       .status(400)
-      .send({ error: "User public key and signed transaction are required" });
+      .send({
+        error:
+          "User public key, signed transaction, and win status are required",
+      });
   }
 
   const userPubKey = new PublicKey(userPublicKey);
@@ -97,7 +98,7 @@ export default async (req, res) => {
     const signature = await connection.sendRawTransaction(
       serializedTransaction
     );
-    await connection.sendAndConfirmTransaction(signature);
+    await connection.confirmTransaction(signature);
 
     res.send({ success: true, signature });
   } catch (error) {
