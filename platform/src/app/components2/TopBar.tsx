@@ -121,6 +121,12 @@ export function TopBar() {
                   GAME 3
                 </div>
               </Link>
+              <Link href="/game3">
+                {" "}
+                <div className="w-[110px] bg-[#6e6b6b11] h-[90px] items-center justify-center flex cursor-pointer hover:opacity-[0.5]">
+                  Claim Rewards
+                </div>
+              </Link>
             </div>
           </div>
           <div className="relative mr-2 flex w-full items-center justify-end p-1 sm:right-auto sm:mr-0">

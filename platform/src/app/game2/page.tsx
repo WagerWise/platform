@@ -145,53 +145,9 @@ const Page = () => {
     },
   ];
 
-  const HELIUS_RPC_URL =
-    "https://rpc.helius.xyz?api-key=4facc46f-a686-4906-8283-45f08abb210f";
-  const connection = new Connection(HELIUS_RPC_URL);
-  const BONK_MINT_ADDRESS = new PublicKey(
-    "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"
-  );
-
-  const handlePlayGame = async () => {
-    if (!publicKey || !signTransaction) {
-      console.log("Wallet not connected or signTransaction not available");
-      return;
-    }
-
-    try {
-      console.log("User Public Key:", publicKey.toBase58());
-      console.log("Is User Win:", isUserWin);
-
-      const transaction = new Transaction().add(
-        SystemProgram.transfer({
-          fromPubkey: publicKey,
-          toPubkey: new PublicKey(
-            "GzJj5ubCzEbakT6zrcnArnVeNAGBsEkVx6LLkCEMdBvT"
-          ),
-          lamports: 100 * 10 ** 5,
-        })
-      );
-
-      transaction.recentBlockhash = (
-        await connection.getLatestBlockhash()
-      ).blockhash;
-      transaction.feePayer = publicKey;
-
-      const signedTransaction = await signTransaction(transaction);
-      const serializedTransaction = signedTransaction
-        .serialize()
-        .toString("base64");
-
-      const response = await axios.post("http://localhost:3000/play-game", {
-        userPublicKey: publicKey.toBase58(),
-        userSignedTx: serializedTransaction,
-        isUserWin,
-      });
-
-      console.log("Transaction response:", response.data);
-    } catch (error) {
-      console.error("Error during transaction:", error);
-    }
+  const handleOpenSite = () => {
+    const siteUrl = "https://candypay.fun/pay/248xdHFuBz7VE6vZ49QDj8";
+    window.open(siteUrl, "_blank");
   };
 
   if (selectedCard) {
@@ -220,7 +176,7 @@ const Page = () => {
         <center>
           <div className="flex w-full mt-10">
             <button
-              onClick={handlePlayGame}
+              onClick={handleOpenSite}
               disabled={loading}
               className="open-btn"
             >
