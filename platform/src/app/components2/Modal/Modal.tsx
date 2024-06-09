@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "./styles.module.css";
 
-const Modal = () => {
+const Modal = ({ isOpen, onClose, children }) => {
   const [isOpen, setIsOpen] = useState(true);
 
   const closeModal = () => {
